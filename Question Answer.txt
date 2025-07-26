@@ -1,0 +1,87 @@
+Question:01- What method or library did you use to extract the text, and why? Did you face any formatting challenges with the PDF content?
+Answer:
+
+Library Used: PyMuPDF (imported as fitz)
+Reason: It is one of the few PDF parsers that handles Bangla fonts and multi-line formatting more reliably than alternatives like pdfminer.six or pdftotext.
+
+Challenges:
+Yes, some formatting inconsistencies were present:
+1. Broken Bangla words across lines
+2. Merged paragraphs without spacing
+
+Occasional headers/footers being embedded in content
+These were partially resolved by applying text pre-processing (For example: whitespace normalization, newline filtering) before chunking.
+
+
+Question:02- What chunking strategy did you choose (e.g. paragraph-based, sentence-based, character limit)? Why do you think it works well for semantic retrieval?
+Answer:
+
+Strategy: Character-limit chunking using LangChain's RecursiveCharacterTextSplitter
+Chunk Size: 500 characters
+Overlap: 50 characters
+
+Why it works:
+
+1. Ensures consistent chunk size across unevenly formatted Bangla text
+2. Works better for semantic embeddings, as each chunk maintains enough context
+
+Overlap helps retain meaning across chunk boundaries, avoiding "lost context"
+
+
+Question:03- What embedding model did you use? Why did you choose it? How does it capture the meaning of the text?
+Answer:
+
+Model Used: sentence-transformers/distiluse-base-multilingual-cased-v1
+
+Why:
+1. Supports 100+ languages including Bangla and English
+2. Optimized for semantic similarity tasks (e.g., RAG)
+3. Lightweight and fast for local or small-server usage
+
+How it works:
+1. Maps both queries and document chunks into the same semantic vector space
+2. Captures contextual relationships and linguistic meaning, not just keyword overlap
+3. Suitable for cross-lingual information retrieval
+
+
+Question:04- How are you comparing the query with your stored chunks? Why did you choose this similarity method and storage setup?
+Answer:
+
+Method:
+1. Query is embedded using the same model
+2. Compared using cosine similarity in a FAISS index (Flat L2)
+
+Why this setup:
+1. FAISS provides fast and scalable similarity search
+2. Cosine similarity is standard for comparing sentence embeddings
+3. Easy integration with LangChain's vector store API
+
+
+
+Question:05- How do you ensure that the question and the document chunks are compared meaningfully? What would happen if the query is vague or missing context?
+Answer:
+
+Ensuring meaningful comparison:
+1. Same embedding model used for both query and documents (no mismatch)
+2. Dense vector representation captures contextual intent of the query
+3. Top-K retrieval ensures multiple relevant options are considered
+
+If the query is vague:
+1. System may retrieve loosely related or partially matched chunks
+2. Answer quality may degrade
+
+This can be improved by:
+1. Expanding chunk context
+2. Using a query rewriting module
+3. Alerting the user for clarification
+
+
+
+Question:06- Do the results seem relevant? If not, what might improve them (e.g. better chunking, better embedding model, larger document)?
+Answer:
+
+Yes, results are relevant for the test questions, such as:
+
+"অনুপমের ভাষায় সুপুরুষ কাকে বলা হয়েছে?" → শম্ভুনাথ
+
+"কল্যাণীর বিয়ের সময় বয়স কত ছিল?" → ১৫ বছর

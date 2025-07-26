@@ -1,0 +1,10 @@
+Used tools,library,package
+
+fastapi
+basemodel
+uvicorn
+pydantic
+PyMuPDF
+langchain
+sentence-transformers
+faiss-cpu
