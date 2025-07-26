@@ -1,0 +1,22 @@
+## Setup Guide
+
+1. Clone & Setup Environment
+
+```bash
+git clone <repo-url>
+cd rag_system
+pip install -r requirements.txt
+```
+
+2. Add Your Knowledge Source
+
+Place the file `HSC26-Bangla1st-Paper.pdf` in the project root folder.
+
+
+3. Run the App
+
+```bash
+uvicorn main:app --reload
+```
+
+Access the app at: [http://localhost:8000/docs](http://localhost:8000/docs)

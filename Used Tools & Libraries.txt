@@ -1,0 +1,6 @@
+## Tools & Libraries Used
+
+- LangChain: Chunking, Vector Store (FAISS)
+- PyMuPDF: PDF parsing
+- Sentence Transformers: distiluse-base-multilingual-cased-v1
+- FastAPI: RESTful API framework
